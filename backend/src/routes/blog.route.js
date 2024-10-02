@@ -1,13 +1,14 @@
 const express = require("express");
 const Blog = require("../model/blog.model");
 const Comment = require("../model/comment.model");
+const verifyToken = require("../middleware/verifyToken");
 
 const router = express.Router();
 
 //create a blog post
-router.post("/create-post", async (req, res) => {
+router.post("/create-post",verifyToken, async (req, res) => {
   try {
-    const newPost = new Blog({ ...req.body });
+    const newPost = new Blog({ ...req.body, author: req.userId });
     await newPost.save();
     res.status(201).send({
       message: "Post created successfully",
@@ -48,7 +49,7 @@ router.get("/", async (req, res) => {
         location,
       };
     }
-    const posts = await Blog.find(query).sort({ createdAt: -1 });
+    const posts = await Blog.find(query).populate('author','email').sort({ createdAt: -1 });
     res.status(200).send({
       message: "All posts successfully",
       post: posts,
@@ -84,7 +85,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // update post by id
-router.patch("/update-post/:id", async (req, res) => {
+router.patch("/update-post/:id",verifyToken, async (req, res) => {
   try {
     const postId = req.params.id;
     const updatedPost = await Blog.findByIdAndUpdate(
@@ -108,7 +109,7 @@ router.patch("/update-post/:id", async (req, res) => {
 });
 
 //delete a blog post
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",verifyToken, async (req, res) => {
   try {
     const postId = req.params.id;
     const deletedPost = await Blog.findByIdAndDelete(postId);
@@ -129,7 +130,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //related posts
-router.get("/related/:id", async (req, res) => {
+router.get("/related/:id",verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
