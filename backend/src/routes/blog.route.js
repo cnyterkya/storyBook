@@ -15,7 +15,7 @@ router.post("/create-post", async (req, res) => {
     });
   } catch (error) {
     console.log("Error creating post: ", error);
-    res.status(500).send("Error creating post");
+    res.status(500).send({message:"Error creating post"});
   }
 });
 
@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
     });
   } catch (error) {
     console.log("Error fetching posts: ", error);
-    res.status(500).send("Error fetching posts");
+    res.status(500).send({message:"Error fetching posts"});
   }
 });
 
@@ -79,7 +79,7 @@ router.get("/:id", async (req, res) => {
     });
   } catch (error) {
     console.log("Error fetching single post: ", error);
-    res.status(500).send("Error fetching single post");
+    res.status(500).send({message:"Error fetching single post"});
   }
 });
 
@@ -103,7 +103,7 @@ router.patch("/update-post/:id", async (req, res) => {
     });
   } catch (error) {
     console.log("Error updating post: ", error);
-    res.status(500).send("Error updating post");
+    res.status(500).send({message:"Error updating post"});
   }
 });
 
@@ -124,7 +124,7 @@ router.delete("/:id", async (req, res) => {
     });
   } catch (error) {
     console.log("Error deleting post: ", error);
-    res.status(500).send("Error deleting post");
+    res.status(500).send({message:"Error deleting post"});
   }
 });
 
@@ -155,7 +155,7 @@ router.get("/related/:id", async (req, res) => {
     });
   } catch (error) {
     console.log("Error fetching related posts: ", error);
-    res.status(500).send("Error fetching related posts");
+    res.status(500).send({message:"Error fetching related posts"});
   }
 });
 

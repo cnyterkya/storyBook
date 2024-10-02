@@ -13,7 +13,7 @@ router.post("/post-comment", async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating comment: ", error);
-    res.status(500).send("Error creating comment");
+    res.status(500).send({message:"Error creating comment"});
   }
 });
 
@@ -28,7 +28,7 @@ router.get("/total-comments", async (req, res) => {
     });
   } catch (error) {
     console.error("Error getting comment count: ", error);
-    res.status(500).send("Error getting comment count");
+    res.status(500).send({message:"Error getting comment count"});
   }
 });
 module.exports = router;
