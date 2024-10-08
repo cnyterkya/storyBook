@@ -2,11 +2,12 @@ const express = require("express");
 const Blog = require("../model/blog.model");
 const Comment = require("../model/comment.model");
 const verifyToken = require("../middleware/verifyToken");
+const isAdmin = require("../middleware/isAdmin");
 
 const router = express.Router();
 
 //create a blog post
-router.post("/create-post",verifyToken, async (req, res) => {
+router.post("/create-post", verifyToken, isAdmin, async (req, res) => {
   try {
     const newPost = new Blog({ ...req.body, author: req.userId });
     await newPost.save();
@@ -16,7 +17,7 @@ router.post("/create-post",verifyToken, async (req, res) => {
     });
   } catch (error) {
     console.log("Error creating post: ", error);
-    res.status(500).send({message:"Error creating post"});
+    res.status(500).send({ message: "Error creating post" });
   }
 });
 
@@ -49,14 +50,14 @@ router.get("/", async (req, res) => {
         location,
       };
     }
-    const posts = await Blog.find(query).populate('author','email').sort({ createdAt: -1 });
+    const posts = await Blog.find(query).populate('author', 'email').sort({ createdAt: -1 });
     res.status(200).send({
       message: "All posts successfully",
       post: posts,
     });
   } catch (error) {
     console.log("Error fetching posts: ", error);
-    res.status(500).send({message:"Error fetching posts"});
+    res.status(500).send({ message: "Error fetching posts" });
   }
 });
 
@@ -80,12 +81,12 @@ router.get("/:id", async (req, res) => {
     });
   } catch (error) {
     console.log("Error fetching single post: ", error);
-    res.status(500).send({message:"Error fetching single post"});
+    res.status(500).send({ message: "Error fetching single post" });
   }
 });
 
 // update post by id
-router.patch("/update-post/:id",verifyToken, async (req, res) => {
+router.patch("/update-post/:id", verifyToken, async (req, res) => {
   try {
     const postId = req.params.id;
     const updatedPost = await Blog.findByIdAndUpdate(
@@ -104,12 +105,12 @@ router.patch("/update-post/:id",verifyToken, async (req, res) => {
     });
   } catch (error) {
     console.log("Error updating post: ", error);
-    res.status(500).send({message:"Error updating post"});
+    res.status(500).send({ message: "Error updating post" });
   }
 });
 
 //delete a blog post
-router.delete("/:id",verifyToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const postId = req.params.id;
     const deletedPost = await Blog.findByIdAndDelete(postId);
@@ -125,12 +126,12 @@ router.delete("/:id",verifyToken, async (req, res) => {
     });
   } catch (error) {
     console.log("Error deleting post: ", error);
-    res.status(500).send({message:"Error deleting post"});
+    res.status(500).send({ message: "Error deleting post" });
   }
 });
 
 //related posts
-router.get("/related/:id",verifyToken, async (req, res) => {
+router.get("/related/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -156,7 +157,7 @@ router.get("/related/:id",verifyToken, async (req, res) => {
     });
   } catch (error) {
     console.log("Error fetching related posts: ", error);
-    res.status(500).send({message:"Error fetching related posts"});
+    res.status(500).send({ message: "Error fetching related posts" });
   }
 });
 
